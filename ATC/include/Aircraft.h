@@ -25,6 +25,8 @@ public:
 
 	// Getter for ID
 	int getId() const;
+	float getY() const;
+	float getX() const;
 
 	// Method to update the position based on speed and elapsed time
     void updatePosition(float deltaTime);

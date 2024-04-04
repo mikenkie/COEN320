@@ -22,10 +22,10 @@ Aircraft::Aircraft(int id) :
 int Aircraft::getId() const {
 	return id;
 }
-float getX() const {
+float Aircraft::getX() const {
 	return x;
 }
-float getY() const {
+float Aircraft:: getY() const {
 	return y;
 }
 
