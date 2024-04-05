@@ -1,1 +1,2 @@
-build/x86_64-debug/src/ATC.o: src/ATC.cpp include/Aircraft.h
+build/x86_64-debug/src/ATC.o: src/ATC.cpp include/Aircraft.h \
+ include/Radar.h include/Aircraft.h

@@ -8,11 +8,16 @@
 #ifndef AIRCRAFT_H_
 #define AIRCRAFT_H_
 
-#include <iostream>
 #include <unistd.h> // For sleep()
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 class Aircraft {
 private:
+	pthread_mutex_t mutex;
 	int id;
 	float x, y, z; // Position coordinates
 	float speedX, speedY, speedZ; // Speed components in each direction
@@ -20,7 +25,8 @@ private:
 public:
 
 	// Constructor
-	Aircraft(int id, float posX, float posY, float posZ, float speedX, float speedY, float speedZ);
+	Aircraft(int id, float posX, float posY, float posZ, float speedX,
+			float speedY, float speedZ);
 	Aircraft(int id);
 	Aircraft();
 
@@ -37,15 +43,13 @@ public:
 	// Mutators for Speed
 	void setSpeedX(float speedX);
 	void setSpeedY(float speedY);
-	void setSpeedZ(float speedZ); 
+	void setSpeedZ(float speedZ);
 
-	// Method to update the position based on speed and elapsed time
-    void updatePosition(float deltaTime);
-
-    // Method to print the current position and speed of the aircraft
-    void printStatus() const;
-
-    void simulate();
+	// Method to print the current position and speed of the aircraft
+	void printStatus() const;
+	void radarResponse(int &idOut, float &xOut, float &yOut, float &zOut,
+			float &sXOut, float &sYOut, float &sZOut);
+	void simulate();
 };
 
 #endif /* AIRCRAFT_H_ */

@@ -5,20 +5,35 @@
  *      Author: matth
  */
 
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+using namespace std;
+#include "cTimer.h"
 #include "Aircraft.h"
 
 #include <unistd.h> // For sleep()
 // Constructor implementation
+
 Aircraft::Aircraft(int id, float posX, float posY, float posZ, float sX,
-		float sY, float sZ) :
-		id(id), x(posX), y(posY), z(posZ), speedX(sX), speedY(sY), speedZ(sZ) {
+		float sY, float sZ) {
+	this->id = id;
+	this->x = posX;
+	this->y = posY;
+	this->z = posZ;
+	this->speedX = sX;
+	this->speedY = sY;
+	this->speedZ = sZ;
+	pthread_mutex_init(&mutex, NULL); // Initialize the mutex
 }
 
 Aircraft::Aircraft(int id) :
 		id(id), x(0), y(0), z(0), speedX(0), speedY(0), speedZ(0) {
 }
 
-Aircraft::Aircraft(){}
+Aircraft::Aircraft() {
+}
 
 // Get/set
 int Aircraft::getId() const {
@@ -27,39 +42,32 @@ int Aircraft::getId() const {
 float Aircraft::getX() const {
 	return x;
 }
-float Aircraft:: getY() const {
+float Aircraft::getY() const {
 	return y;
 }
 
-void Aircraft:: setX(float posX) {
+void Aircraft::setX(float posX) {
 	x = posX;
 }
 
-void Aircraft:: setY(float posY) {
+void Aircraft::setY(float posY) {
 	y = posY;
 }
 
-void Aircraft:: setZ(float posZ) {
+void Aircraft::setZ(float posZ) {
 	z = posZ;
 }
 
-void Aircraft:: setSpeedX(float spX) {
+void Aircraft::setSpeedX(float spX) {
 	speedX = spX;
 }
 
-void Aircraft:: setSpeedY(float spY) {
+void Aircraft::setSpeedY(float spY) {
 	speedY = spY;
 }
 
-void Aircraft:: setSpeedZ(float spZ) {
+void Aircraft::setSpeedZ(float spZ) {
 	speedZ = spZ;
-}
-
-// Update position based on speed and elapsed time
-void Aircraft::updatePosition(float deltaTime) {
-	x += speedX * deltaTime;
-	y += speedY * deltaTime;
-	z += speedZ * deltaTime;
 }
 
 // Print current status of the aircraft
@@ -70,12 +78,31 @@ void Aircraft::printStatus() const {
 }
 
 void Aircraft::simulate() {
+	int period_sec = 1;
+	cTimer timer(period_sec, 0); //initialize, set, and start the timer
 
-	for (int i = 0; i < 5; ++i) {
-		x += speedX; // Update x coordinate
-		y += speedY; // Update y coordinate
-		std::cout << "Aircraft " << id << " is operating at coordinates (" << x
-				<< ", " << y << ", " << z << ")" << std::endl;
-		sleep(1); // Sleep for a bit to simulate time passing
-	}
+	int time = 0;
+	int count = 0;
+
+	while (true) {
+		time = count * period_sec;
+
+		x = speedX * (time);
+		y = speedY * (time);
+		z = speedZ * (time);
+
+		count++;
+		timer.waitTimer();
+	} //end_while
+}
+
+void Aircraft::radarResponse(int &idOut, float &xOut, float &yOut, float &zOut,
+		float &sXOut, float &sYOut, float &sZOut) {
+	idOut = id;
+	xOut = x;
+	yOut = y;
+	zOut = z;
+	sXOut = speedX;
+	sYOut = speedY;
+	sZOut = speedZ;
 }

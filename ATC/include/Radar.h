@@ -1,12 +1,24 @@
 /*
  * Radar.h
  *
- *  
- * Author: mikenkie
+ *  Created on: Apr 5, 2024
+ *      Author: matth
  */
+
 #ifndef RADAR_H_
 #define RADAR_H_
+#include "Aircraft.h"
+#include <vector>
+using namespace std;
 
-#include <iostream>
+class Radar {
+	vector<Aircraft*> aircraftList;
+public:
+	Radar(vector<Aircraft*> acList);
 
-#endif
+	void simulate();
+
+	virtual ~Radar();
+};
+#endif /* RADAR_H_ */
+
