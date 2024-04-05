@@ -13,6 +13,7 @@
 class OperatorConsole {
     private:
         Aircraft aircraft;
+        Aircraft arrayAircrafts [5];
 
     public:
         // Constructor
@@ -22,13 +23,14 @@ class OperatorConsole {
         // Method to allow controller to change which aircraft they wish to control
         void requestAircraftControlChange (Aircraft ar);
         Aircraft getAircraftConsole () const;
+        Aircraft getAircraftById(int requestedID);
 
-        // Methods to allow the controller to change speed of the desired aircraft. These methods are passed to send() in CommunicationSystem
+        // Methods to allow the controller to change speed of the desired aircraft. 
         void changeSpeedX(float speedX);
         void changeSpeedY(float speedY);
         void changeSpeedZ(float speedZ);
 
-        // Methods to allow the controller to change position's coordinates of the desired aircraft. These methods are passed to send() in CommunicationSystem
+        // Methods to allow the controller to change position's coordinates of the desired aircraft. 
         void changePositionX(float posX);
         void changePositionY(float posY);
         void changePositionZ(float posZ); // reminder: flight level
