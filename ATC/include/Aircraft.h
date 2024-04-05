@@ -28,6 +28,16 @@ public:
 	float getY() const;
 	float getX() const;
 
+	// Mutator for Position Coordinates
+	void setX(float posX);
+	void setY(float posY);
+	void setZ(float posZ);
+
+	// Mutators for Speed
+	void setSpeedX(float speedX);
+	void setSpeedY(float speedY);
+	void setSpeedZ(float speedZ); 
+
 	// Method to update the position based on speed and elapsed time
     void updatePosition(float deltaTime);
 

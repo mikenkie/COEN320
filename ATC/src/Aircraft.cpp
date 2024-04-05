@@ -29,6 +29,30 @@ float Aircraft:: getY() const {
 	return y;
 }
 
+void Aircraft:: setX(float posX)) {
+	x = posX;
+}
+
+void Aircraft:: setY(float posY)) {
+	y = posY;
+}
+
+void Aircraft:: setZ(float posZ)) {
+	z = posZ;
+}
+
+void Aircraft:: setSpeedX(float spX)) {
+	speedX = spX;
+}
+
+void Aircraft:: setSpeecY(float spY)) {
+	speedY = spY;
+}
+
+void Aircraft:: setSpeedZ(float spZ)) {
+	speedZ = spZ;
+}
+
 // Update position based on speed and elapsed time
 void Aircraft::updatePosition(float deltaTime) {
 	x += speedX * deltaTime;
