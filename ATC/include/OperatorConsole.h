@@ -8,7 +8,9 @@
 #define OPERATORCONSOLE_H_
 
 #include <iostream>
+#include <istream>
 #include "Aircraft.h"
+#include "Radar.h"
 
 class OperatorConsole {
     private:
@@ -23,7 +25,6 @@ class OperatorConsole {
         // Method to allow controller to change which aircraft they wish to control
         void requestAircraftControlChange (Aircraft ar);
         Aircraft getAircraftConsole () const;
-        Aircraft getAircraftById(int requestedID);
 
         // Methods to allow the controller to change speed of the desired aircraft. 
         void changeSpeedX(float speedX);

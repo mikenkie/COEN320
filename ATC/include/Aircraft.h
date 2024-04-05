@@ -22,6 +22,7 @@ public:
 	// Constructor
 	Aircraft(int id, float posX, float posY, float posZ, float speedX, float speedY, float speedZ);
 	Aircraft(int id);
+	Aircraft();
 
 	// Getter for ID
 	int getId() const;

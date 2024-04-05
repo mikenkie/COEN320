@@ -5,29 +5,16 @@
 */
 
 #include "OperatorConsole.h"
-#include "Radar.h"
 
-OperatorConsole::OperatorConsole() {}
+OperatorConsole::OperatorConsole(){}
 
-OperatorConsole::OperatorConsole(Aircraft ar) {
-    aircraft = ar;
-}
+OperatorConsole::OperatorConsole(Aircraft ar): aircraft(ar){}
 
 void OperatorConsole:: requestAircraftControlChange (Aircraft ar) {
     aircraft = ar;
     std::cout << "Aircraft ID: " << aircraft.getId() << " successfully switched to console." << std::endl;
 }
 
-Aircraft OperatorConsole:: getAircraftById(int requestedID) {
-    int temp;
-    for (int i = 0; i < 5; i++) {
-        temp = arrayAircrafts->getId()
-        if (temp == requestedID) {
-            return arrayAircrafts[i];
-        }
-    }
-    return null; 
-}
 Aircraft OperatorConsole:: getAircraftConsole () const {
     return aircraft;
 }
@@ -57,6 +44,9 @@ void OperatorConsole:: changePositionZ(float posZ) {
 }
 
 void OperatorConsole:: sendAugmentedInfoToRadar(std::string message) {
+    std::string requestAircraftChange;
+    int aircraftID; 
+
     std::cout << "You are currently requesting information about Aircraft " << aircraft.getId() << ". " << std::endl;
 
     std::cout << "If you wish to change the aircraft to be display on the radar, enter yes or no:"<< std::endl;
@@ -67,9 +57,11 @@ void OperatorConsole:: sendAugmentedInfoToRadar(std::string message) {
         std::cout << "Please enter a valid Aircraft ID:" << std::endl;
         std::cin >> aircraftID;
 
-        requestAircraftControlChange();
+        // TO-DO once Radar is done
+        //requestAircraftControlChange();
     }
-    else {
-
-    }
+   
+    // TO-DO once Radar is done
+    // Send request to Radar
+    
 }

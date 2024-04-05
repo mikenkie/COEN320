@@ -18,6 +18,8 @@ Aircraft::Aircraft(int id) :
 		id(id), x(0), y(0), z(0), speedX(0), speedY(0), speedZ(0) {
 }
 
+Aircraft::Aircraft(){}
+
 // Get/set
 int Aircraft::getId() const {
 	return id;
@@ -29,27 +31,27 @@ float Aircraft:: getY() const {
 	return y;
 }
 
-void Aircraft:: setX(float posX)) {
+void Aircraft:: setX(float posX) {
 	x = posX;
 }
 
-void Aircraft:: setY(float posY)) {
+void Aircraft:: setY(float posY) {
 	y = posY;
 }
 
-void Aircraft:: setZ(float posZ)) {
+void Aircraft:: setZ(float posZ) {
 	z = posZ;
 }
 
-void Aircraft:: setSpeedX(float spX)) {
+void Aircraft:: setSpeedX(float spX) {
 	speedX = spX;
 }
 
-void Aircraft:: setSpeecY(float spY)) {
+void Aircraft:: setSpeedY(float spY) {
 	speedY = spY;
 }
 
-void Aircraft:: setSpeedZ(float spZ)) {
+void Aircraft:: setSpeedZ(float spZ) {
 	speedZ = spZ;
 }
 
