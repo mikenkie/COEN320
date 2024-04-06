@@ -15,10 +15,14 @@ class Radar {
 	vector<Aircraft*> aircraftList;
 public:
 	Radar(vector<Aircraft*> acList);
+	Radar();
 
 	void simulate();
 
 	virtual ~Radar();
+
+	vector <Aircraft*> getAircraftVector();
+
 };
 #endif /* RADAR_H_ */
 

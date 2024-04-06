@@ -10,12 +10,11 @@
 #include <iostream>
 #include <istream>
 #include "Aircraft.h"
-#include "Radar.h"
+#include "ComputerSystem.h"
 
 class OperatorConsole {
     private:
         Aircraft aircraft;
-        Aircraft arrayAircrafts [5];
 
     public:
         // Constructor
@@ -27,17 +26,17 @@ class OperatorConsole {
         Aircraft getAircraftConsole () const;
 
         // Methods to allow the controller to change speed of the desired aircraft. 
-        void changeSpeedX(float speedX);
-        void changeSpeedY(float speedY);
-        void changeSpeedZ(float speedZ);
+        void changeSpeedX(ComputerSystem& comSystem, float speedX);
+        void changeSpeedY(ComputerSystem& comSystem, float speedY);
+        void changeSpeedZ(ComputerSystem& comSystem, float speedZ);
 
         // Methods to allow the controller to change position's coordinates of the desired aircraft. 
-        void changePositionX(float posX);
-        void changePositionY(float posY);
-        void changePositionZ(float posZ); // reminder: flight level
+        void changePositionX(ComputerSystem& comSystem, float posX);
+        void changePositionY(ComputerSystem& comSystem, float posY);
+        void changePositionZ(ComputerSystem& comSystem, float posZ); // reminder: flight level
 
         // Method to send information about aircraft to Radar to be displated by DataDisplay
-        void sendAugmentedInfoToRadar( std::string message);
+        void sendAugmentedInfoToRadar(ComputerSystem & comSysteme);
 
 
 };

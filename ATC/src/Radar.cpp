@@ -16,8 +16,14 @@ Radar::Radar(vector<Aircraft*> acList){
 	aircraftList = acList;
 }
 
+Radar::Radar(){}
+
 Radar::~Radar() {
 	// TODO Auto-generated destructor stub
+}
+
+vector <Aircraft*> Radar::getAircraftVector() {
+	return aircraftList;
 }
 
 void Radar::simulate(){

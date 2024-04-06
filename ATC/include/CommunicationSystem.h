@@ -19,8 +19,13 @@ class CommunicationSystem {
         // Default Constructor
         CommunicationSystem();
 
-        // Method responsible for the transmission of controller commands to the specified aircraft
-        void send (Aircraft aircraft, std::string message);
+        void executeChangePositionX (Aircraft& aircraft, float posX);
+        void executeChangePositionY (Aircraft& aircraft, float posY);
+        void executeChangePositionZ (Aircraft& aircraft, float posZ);
+
+        void executeChangeSpeedX (Aircraft& aircraft, float speedX);
+        void executeChangeSpeedY (Aircraft& aircraft, float speedY);
+        void executeChangeSpeedZ (Aircraft& aircraft, float speedZ);
 };
 
 #endif

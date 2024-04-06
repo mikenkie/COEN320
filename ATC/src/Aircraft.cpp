@@ -45,6 +45,12 @@ float Aircraft::getX() const {
 float Aircraft::getY() const {
 	return y;
 }
+float Aircraft::getZ() const {
+	return z;
+}
+float Aircraft::getSpeedX() const {
+	return speedX;
+}
 
 void Aircraft::setX(float posX) {
 	x = posX;

@@ -5,6 +5,9 @@
 */
 
 #include "OperatorConsole.h"
+#include <string>
+#include <iostream>
+#include <istream>
 
 OperatorConsole::OperatorConsole(){}
 
@@ -19,31 +22,43 @@ Aircraft OperatorConsole:: getAircraftConsole () const {
     return aircraft;
 }
 
-void OperatorConsole:: changeSpeedX(float speedX) {
-    aircraft.setSpeedX(speedX); 
+void OperatorConsole:: changeSpeedX(ComputerSystem& comSystem, float speedX) {
+    string message = "CHANGE SPEEDX ";
+    message += to_string(speedX);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: changeSpeedY(float speedY) {
-    aircraft.setSpeedY(speedY); 
+void OperatorConsole:: changeSpeedY(ComputerSystem& comSystem, float speedY) {
+    string message = "CHANGE SPEEDY ";
+    message += to_string(speedY);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: changeSpeedZ(float speedZ) {
-    aircraft.setSpeedZ(speedZ); 
+void OperatorConsole:: changeSpeedZ(ComputerSystem& comSystem, float speedZ) {
+    string message = "CHANGE SPEEDZ ";
+    message += to_string(speedZ);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: changePositionX(float posX) {
-    aircraft.setX(posX);
+void OperatorConsole:: changePositionX(ComputerSystem& comSystem, float posX) {
+    string message = "CHANGE POSX ";
+    message += to_string(posX);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: changePositionY(float posY) {
-     aircraft.setY(posY);
+void OperatorConsole:: changePositionY(ComputerSystem& comSystem, float posY) {
+    string message = "CHANGE POSY ";
+    message += to_string(posY);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: changePositionZ(float posZ) {
-     aircraft.setZ(posZ);
+void OperatorConsole:: changePositionZ(ComputerSystem& comSystem, float posZ) {
+    string message = "CHANGE POSZ ";
+    message += to_string(posZ);
+    comSystem.send(aircraft, message);
 }
 
-void OperatorConsole:: sendAugmentedInfoToRadar(std::string message) {
+void OperatorConsole:: sendAugmentedInfoToRadar(ComputerSystem& comSystem) {
     std::string requestAircraftChange;
     int aircraftID; 
 
@@ -52,16 +67,19 @@ void OperatorConsole:: sendAugmentedInfoToRadar(std::string message) {
     std::cout << "If you wish to change the aircraft to be display on the radar, enter yes or no:"<< std::endl;
     std::cin >> requestAircraftChange;
 
-    // The if statement changes the aircraft the controller wishes to request to be on the rader
+    // The if statement changes the aircraft the controller wishes to request to be on the rader via send() in Communication System
     if (requestAircraftChange.compare("yes")) {
         std::cout << "Please enter a valid Aircraft ID:" << std::endl;
         std::cin >> aircraftID;
 
-        // TO-DO once Radar is done
-        //requestAircraftControlChange();
+        for (Aircraft* ar: comSystem.getAircraftVectorFromRadar()) {
+            if (ar->getId() == aircraftID) {
+                requestAircraftControlChange(*ar);
+                break;
+            }
+        }
     }
-   
-    // TO-DO once Radar is done
-    // Send request to Radar
+
+    comSystem.send(aircraft, "RETRIEVE ALL AIRCRAFT INFORMATION");
     
 }

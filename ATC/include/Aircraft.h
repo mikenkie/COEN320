@@ -32,8 +32,10 @@ public:
 
 	// Getter for ID
 	int getId() const;
-	float getY() const;
-	float getX() const;
+	float getY() const; //latitude
+	float getX() const; //longitude
+	float getZ() const; //altitude
+	float getSpeedX() const;
 
 	// Mutator for Position Coordinates
 	void setX(float posX);
