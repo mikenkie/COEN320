@@ -19,14 +19,15 @@ class Aircraft {
 private:
 	pthread_mutex_t mutex;
 	int id;
+	int time;
 	float x, y, z; // Position coordinates
 	float speedX, speedY, speedZ; // Speed components in each direction
 
 public:
 
 	// Constructor
-	Aircraft(int id, float posX, float posY, float posZ, float speedX,
-			float speedY, float speedZ);
+	Aircraft(int id, int t, float posX, float posY, float posZ, float speedX,
+				float speedY, float speedZ);
 	Aircraft(int id);
 	Aircraft();
 

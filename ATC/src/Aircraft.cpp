@@ -16,9 +16,10 @@ using namespace std;
 #include <unistd.h> // For sleep()
 // Constructor implementation
 
-Aircraft::Aircraft(int id, float posX, float posY, float posZ, float sX,
+Aircraft::Aircraft(int id, int t, float posX, float posY, float posZ, float sX,
 		float sY, float sZ) {
 	this->id = id;
+	this->time = t;
 	this->x = posX;
 	this->y = posY;
 	this->z = posZ;
@@ -93,9 +94,9 @@ void Aircraft::simulate() {
 	while (true) {
 		time = count * period_sec;
 
-		x = speedX * (time);
-		y = speedY * (time);
-		z = speedZ * (time);
+		x = x + speedX;
+		y = y + speedY;
+		z = z + speedZ;
 
 		count++;
 		timer.waitTimer();

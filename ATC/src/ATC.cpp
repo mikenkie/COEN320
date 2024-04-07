@@ -93,26 +93,29 @@ void *operatorConsoleThread(void* arg) {
 
 int main() {
     // Create two aircraft
-    Aircraft aircraft1(0, 0, 0, 0, 10, 20, 0 ), aircraft2(1, 0, 0, 0, -10, -20, 0 );
+    Aircraft aircraft1(0, 0, 0, 0, 0, 1000, 2000, 0 ), aircraft2(1, 0, 100000, 100000, 0, -1000, -2000, 0 ), aircraft3(2, 0, 100000, 100000, 0, -1000, -2000, 0 );
     vector<Aircraft*> acVec;
 
     acVec.push_back(&aircraft1);
     acVec.push_back(&aircraft2);
+    acVec.push_back(&aircraft3);
 
     //initialize radar
     Radar radar(acVec);
 
     // Create two threads
-    pthread_t thread1, thread2, rThread;
+    pthread_t thread1, thread2, thread3, rThread;
 
     // Start the threads, passing each thread its corresponding aircraft
     pthread_create(&thread1, NULL, aircraftThread, &aircraft1);
     pthread_create(&thread2, NULL, aircraftThread, &aircraft2);
+    pthread_create(&thread3, NULL, aircraftThread, &aircraft3);
     pthread_create(&rThread, NULL, radarThread, &radar);
 
     // Wait for the threads to finish
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
+    pthread_join(thread3, NULL);
     pthread_join(rThread, NULL);
 
     return 0;

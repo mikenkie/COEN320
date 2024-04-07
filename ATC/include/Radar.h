@@ -13,6 +13,7 @@ using namespace std;
 
 class Radar {
 	vector<Aircraft*> aircraftList;
+	int m[10][10]={0};
 public:
 	Radar(vector<Aircraft*> acList);
 	Radar();
