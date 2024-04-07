@@ -1,14 +1,14 @@
-#include <iostream>
 using namespace std;
 
 #include "Aircraft.h"
-#include <pthread.h>
 #include "Radar.h"
-#include <vector>
-#include <iostream>
 #include "OperatorConsole.h"
 #include "CommunicationSystem.h"
 #include "DataDisplay.h"
+
+#include <vector>
+#include <iostream>
+#include <pthread.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -19,11 +19,23 @@ using namespace std;
 
 #define ATTACH_POINT "my_channel"
 
+struct ThreadArgs {
+    CommunicationSystem* communicationSystem;
+    DataDisplay* dataDisplay;
+    Aircraft* aircraft;
+};
+
 /* Message passing between ATC and Operator Console.
  * Establishes a channel between the ATC and OC. The OC establishes the channel to initiate connection. ATC
  * attaches to the channel to establish connection.
  */
-void* atc_start_routine(CommunicationSystem& communicationSystem, DataDisplay& dataDisplay, Aircraft& aircraft) {
+void* atc_start_routine(void* argsPtr) {
+	ThreadArgs* args = static_cast<ThreadArgs*>(argsPtr);
+
+	CommunicationSystem* cs = args->communicationSystem;
+	DataDisplay* dp = args->dataDisplay;
+	Aircraft* ar = args->aircraft;
+
 	name_attach_t *attach;
 	my_data_t msg;
 
@@ -46,25 +58,25 @@ void* atc_start_routine(CommunicationSystem& communicationSystem, DataDisplay& d
 
 	if (rcvid == 0) {
 		if (msg.command.compare("POSX") == 0) {
-			communicationSystem.executeChangePositionX (aircraft, msg.data);
+			cs->executeChangePositionX (*ar, msg.data);
 		}
 		else if (msg.command.compare("POSY") == 0) {
-			communicationSystem.executeChangePositionY (aircraft, msg.data);
+			cs->executeChangePositionY (*ar, msg.data);
 		}
 		else if (msg.command.compare("POSZ") == 0) {
-			communicationSystem.executeChangePositionZ (aircraft, msg.data);
+			cs->executeChangePositionZ (*ar, msg.data);
 		}
 		else if (msg.command.compare("SPEEDX") == 0) {
-			communicationSystem.executeChangeSpeedX(aircraft, msg.data);
+			cs->executeChangeSpeedX(*ar, msg.data);
 		}
 		else if (msg.command.compare("SPEEDY") == 0) {
-			communicationSystem.executeChangeSpeedY(aircraft, msg.data);
+			cs->executeChangeSpeedY(*ar, msg.data);
 		}
 		else if (msg.command.compare("SPEEDZ") == 0) {
-			communicationSystem.executeChangeSpeedZ(aircraft, msg.data);
+			cs->executeChangeSpeedZ(*ar, msg.data);
 		}
 		else if (msg.command.compare("SEND INFO TO RADAR") == 0) {
-			dataDisplay.displayInfoToRadar(aircraft);
+			dp->displayInfoToRadar(*ar);
 		}
 	}
 
@@ -90,6 +102,7 @@ void *operatorConsoleThread(void* arg) {
     operatorConsole->operator_console_start_routine();
     return NULL;
 }
+
 
 int main() {
     // Create two aircraft
@@ -117,6 +130,23 @@ int main() {
     pthread_join(thread2, NULL);
     pthread_join(thread3, NULL);
     pthread_join(rThread, NULL);
+
+    // Testing ATC and OC communication
+    pthread_t th1, th2;
+
+    OperatorConsole oc;
+    CommunicationSystem commSys;
+    DataDisplay dp;
+
+    ThreadArgs args;
+    args.communicationSystem = &commSys;
+    args.dataDisplay = &dp;
+    args.aircraft = &aircraft1;
+
+    pthread_create(&th1, NULL, operatorConsoleThread, &oc);
+    pthread_create(&th2, NULL, &atc_start_routine,&args);
+    pthread_join(th1, NULL);
+    pthread_join(th2, NULL);
 
     return 0;
 }
