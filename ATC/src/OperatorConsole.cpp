@@ -8,6 +8,14 @@
 #include <string>
 #include <iostream>
 #include <istream>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include "cTimer.h"
+#include <string.h>
+#include <sys/dispatch.h>
+#include <sys/neutrino.h>
+
 
 OperatorConsole::OperatorConsole(){}
 
@@ -22,64 +30,33 @@ Aircraft OperatorConsole:: getAircraftConsole () const {
     return aircraft;
 }
 
-void OperatorConsole:: changeSpeedX(ComputerSystem& comSystem, float speedX) {
-    string message = "CHANGE SPEEDX ";
-    message += to_string(speedX);
-    comSystem.send(aircraft, message);
+/*
+ * Creates the channel to initiate connection with ATC. User inputs command and value. This is the message
+ * being passed. It sends the message to the receiver at the end of the channel
+ */
+void OperatorConsole:: operator_console_start_routine() {
+	my_data_t myData;
+
+	cout << "From the options below type which you would like to change: \n"
+		 << "POSX\n "<< "POSY\n" <<"POSZ\n" << "SPEEDX\n" << "SPEEDY\n" << "SPEEDZ\n" << "SEND INFO TO RADAR"<<endl;
+	cin >> myData.command;
+
+	cout << "Enter value:" << endl;
+	cin >> myData.data;
+
+	int server_coid; //server connection ID.
+
+	if ((server_coid = name_open(ATTACH_POINT, 0)) == -1) {
+		perror("Error occurred while attaching the channel");
+	}
+
+	printf("DEBUG: Starting to send request to ATC...");
+	if (MsgSend(server_coid, &myData, sizeof(myData), NULL, 0) == -1) {
+				printf("Error while sending the data message");
+	}
+
+
+	/* Close the connection */
+	name_close(server_coid);
 }
-
-void OperatorConsole:: changeSpeedY(ComputerSystem& comSystem, float speedY) {
-    string message = "CHANGE SPEEDY ";
-    message += to_string(speedY);
-    comSystem.send(aircraft, message);
-}
-
-void OperatorConsole:: changeSpeedZ(ComputerSystem& comSystem, float speedZ) {
-    string message = "CHANGE SPEEDZ ";
-    message += to_string(speedZ);
-    comSystem.send(aircraft, message);
-}
-
-void OperatorConsole:: changePositionX(ComputerSystem& comSystem, float posX) {
-    string message = "CHANGE POSX ";
-    message += to_string(posX);
-    comSystem.send(aircraft, message);
-}
-
-void OperatorConsole:: changePositionY(ComputerSystem& comSystem, float posY) {
-    string message = "CHANGE POSY ";
-    message += to_string(posY);
-    comSystem.send(aircraft, message);
-}
-
-void OperatorConsole:: changePositionZ(ComputerSystem& comSystem, float posZ) {
-    string message = "CHANGE POSZ ";
-    message += to_string(posZ);
-    comSystem.send(aircraft, message);
-}
-
-void OperatorConsole:: sendAugmentedInfoToRadar(ComputerSystem& comSystem) {
-    std::string requestAircraftChange;
-    int aircraftID; 
-
-    std::cout << "You are currently requesting information about Aircraft " << aircraft.getId() << ". " << std::endl;
-
-    std::cout << "If you wish to change the aircraft to be display on the radar, enter yes or no:"<< std::endl;
-    std::cin >> requestAircraftChange;
-
-    // The if statement changes the aircraft the controller wishes to request to be on the rader via send() in Communication System
-    if (requestAircraftChange.compare("yes")) {
-        std::cout << "Please enter a valid Aircraft ID:" << std::endl;
-        std::cin >> aircraftID;
-
-        for (Aircraft* ar: comSystem.getAircraftVectorFromRadar()) {
-            if (ar->getId() == aircraftID) {
-                requestAircraftControlChange(*ar);
-                break;
-            }
-        }
-    }
-
-    comSystem.send(aircraft, "RETRIEVE ALL AIRCRAFT INFORMATION");
     
-}

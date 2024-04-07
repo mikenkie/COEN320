@@ -7,7 +7,7 @@
 #ifndef DATADISPLAY_H_
 #define DATADISPLAY_H_
 
-#include "ComputerSystem.h"
+#include "Aircraft.h"
 
 class DataDisplay {
     private:
