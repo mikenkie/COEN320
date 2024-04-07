@@ -8,10 +8,13 @@
 #define OPERATORCONSOLE_H_
 
 #include "Aircraft.h"
+#include <sys/dispatch.h>
 
 #define ATTACH_POINT "my_channel"
+typedef struct _pulse msg_header_t;
 
 typedef struct _my_data {
+	msg_header_t pulse;
 	std::string command;
 	float data;
 } my_data_t;
@@ -30,6 +33,7 @@ class OperatorConsole {
         Aircraft getAircraftConsole () const;
 
         void operator_console_start_routine();
+        void* operator_console_start_messaging ();
 };
 
 #endif

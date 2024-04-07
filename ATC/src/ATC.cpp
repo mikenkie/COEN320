@@ -16,20 +16,21 @@ using namespace std;
 #include <string.h>
 #include "cTimer.h"
 #include <sys/dispatch.h>
+#include <sys/siginfo.h>
+#include <sys/trace.h>
 
-#define ATTACH_POINT "my_channel"
 
 struct ThreadArgs {
     CommunicationSystem* communicationSystem;
     DataDisplay* dataDisplay;
     Aircraft* aircraft;
 };
-
 /* Message passing between ATC and Operator Console.
  * Establishes a channel between the ATC and OC. The OC establishes the channel to initiate connection. ATC
  * attaches to the channel to establish connection.
  */
-void* atc_start_routine(void* argsPtr) {
+
+void* ats_start_messaging(void* argsPtr) {
 	ThreadArgs* args = static_cast<ThreadArgs*>(argsPtr);
 
 	CommunicationSystem* cs = args->communicationSystem;
@@ -41,50 +42,88 @@ void* atc_start_routine(void* argsPtr) {
 
 	int rcvid;
 	/* Create a local name (/dev/name/local/...) */
-	if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
-		perror("Error occurred while creating the channel");
-	}
+		if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
+			perror("Error occurred while creating the channel");
+		}
 
-	printf("DEBUG: Connection established by attaching to channel.");
+		/* Do your MsgReceive's here now with the chid */
+		while (true) {
+			rcvid = MsgReceive(attach->chid, &msg, sizeof(msg), NULL);
 
-	rcvid = MsgReceive(attach->chid, &msg, sizeof(msg), NULL);
-	if (rcvid == -1) {/* Error condition, exit */
-		printf("Error occurred in message passed. Message not passed.");
+			if (rcvid == -1) {/* Error condition, exit */
+				break;
+			}
+
+			if (rcvid == 0) {/* Pulse received */
+				switch (msg.pulse.code) {
+				case _PULSE_CODE_DISCONNECT:
+					ConnectDetach(msg.pulse.scoid);
+					break;
+				case _PULSE_CODE_UNBLOCK:
+					//Message Reply later in the code
+					break;
+				default:
+					break;
+				}
+				continue;
+			}
+
+			/* name_open() sends a connect message, must EOK this */
+			if (msg.pulse.type == _IO_CONNECT ) {
+				MsgReply( rcvid, EOK, NULL, 0 );
+				continue;
+			}
+
+			/* Some other QNX IO message was received; reject it */
+			if (msg.pulse.type > _IO_BASE && msg.pulse.type <= _IO_MAX ) {
+				MsgError( rcvid, ENOSYS );
+				continue;
+			}
+
+			if (msg.pulse.type == 0x00) {
+				/*A motion message has been received*/
+				if (msg.pulse.subtype == 0x01) {
+					/* A velocity message has been received  */
+					printf("ATC receiving the the message..");
+
+					if (msg.command.compare("POSX") == 0) {
+						cs->executeChangePositionX (*ar, msg.data);
+					}
+					else if (msg.command.compare("POSY") == 0) {
+						cs->executeChangePositionY (*ar, msg.data);
+					}
+					else if (msg.command.compare("POSZ") == 0) {
+						cs->executeChangePositionZ (*ar, msg.data);
+					}
+					else if (msg.command.compare("SPEEDX") == 0) {
+						cs->executeChangeSpeedX(*ar, msg.data);
+					}
+					else if (msg.command.compare("SPEEDY") == 0) {
+						cs->executeChangeSpeedY(*ar, msg.data);
+					}
+					else if (msg.command.compare("SPEEDZ") == 0) {
+						cs->executeChangeSpeedZ(*ar, msg.data);
+					}
+					else if (msg.command.compare("SEND INFO TO RADAR") == 0) {
+						dp->displayInfoToRadar(*ar);
+					}
+				}
+				else{
+					MsgError(rcvid, ENOSYS );
+					continue;
+				}
+			}
+
+			MsgReply(rcvid, EOK, 0, 0);
+
+		}// while loop
+
+		/* Remove the name from the space */
 		name_detach(attach, 0);
-		return NULL;
-	}
+		return EXIT_SUCCESS;
 
-	printf("DEBUG: Message successfully received.");
+}//function
 
-	if (rcvid == 0) {
-		if (msg.command.compare("POSX") == 0) {
-			cs->executeChangePositionX (*ar, msg.data);
-		}
-		else if (msg.command.compare("POSY") == 0) {
-			cs->executeChangePositionY (*ar, msg.data);
-		}
-		else if (msg.command.compare("POSZ") == 0) {
-			cs->executeChangePositionZ (*ar, msg.data);
-		}
-		else if (msg.command.compare("SPEEDX") == 0) {
-			cs->executeChangeSpeedX(*ar, msg.data);
-		}
-		else if (msg.command.compare("SPEEDY") == 0) {
-			cs->executeChangeSpeedY(*ar, msg.data);
-		}
-		else if (msg.command.compare("SPEEDZ") == 0) {
-			cs->executeChangeSpeedZ(*ar, msg.data);
-		}
-		else if (msg.command.compare("SEND INFO TO RADAR") == 0) {
-			dp->displayInfoToRadar(*ar);
-		}
-	}
-
-
-	/* Remove the name from the space */
-	name_detach(attach, 0);
-	return EXIT_SUCCESS;
-}
 
 void *aircraftThread(void* arg) {
     Aircraft* aircraft = static_cast<Aircraft*>(arg);
@@ -99,7 +138,7 @@ void *radarThread(void* arg) {
 
 void *operatorConsoleThread(void* arg) {
     OperatorConsole* operatorConsole = static_cast<OperatorConsole*>(arg);
-    operatorConsole->operator_console_start_routine();
+    operatorConsole->operator_console_start_messaging ();
     return NULL;
 }
 
@@ -143,8 +182,9 @@ int main() {
     args.dataDisplay = &dp;
     args.aircraft = &aircraft1;
 
+
     pthread_create(&th1, NULL, operatorConsoleThread, &oc);
-    pthread_create(&th2, NULL, &atc_start_routine,&args);
+    pthread_create(&th2, NULL, &ats_start_messaging,&args);
     pthread_join(th1, NULL);
     pthread_join(th2, NULL);
 

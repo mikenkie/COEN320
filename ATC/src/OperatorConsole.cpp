@@ -59,4 +59,60 @@ void OperatorConsole:: operator_console_start_routine() {
 	/* Close the connection */
 	name_close(server_coid);
 }
+
+void* OperatorConsole:: operator_console_start_messaging () {
+	my_data_t myData;
+
+	int server_coid; //server connection ID.
+
+	if ((server_coid = name_open(ATTACH_POINT, 0)) == -1) {
+		perror("Error occurred while attaching the channel");
+	}
+
+
+	uint32_t period_sec=3;
+	uint32_t period_msec=0;
+
+	double period=(double)period_sec+(double)period_msec/1000;
+
+	cTimer timer(period_sec,0,period_sec,0);
+
+	int count=0;
+	double t;
+
+
+	while (t<60.0){
+		t=count*period;
+		printf("Iteration number %d: t=%.2f sec \n",count+1,t);
+
+
+		/* We would have pre-defined data to stuff here */
+		myData.pulse.type = 0x00;
+
+		cout << "From the options below type which you would like to change: \n"
+				 << "POSX\n "<< "POSY\n" <<"POSZ\n" << "SPEEDX\n" << "SPEEDY\n" << "SPEEDZ\n" << "SEND INFO TO RADAR"<<endl;
+		cin >> myData.command;
+
+		cout << "Enter value:" << endl;
+		cin >> myData.data;
+
+		printf("Operator Console retrieving your data inputs: ", myData.command, " ", myData.data, " ....");
+
+
+		if (MsgSend(server_coid, &myData, sizeof(myData), NULL, 0) == -1) {
+			printf("Error while sending the message");
+			break;
+		}
+
+		printf("Operator Console sending data to ATC ...");
+
+		timer.wait_next_activation();
+		count++;
+	}
+
+	/* Close the connection */
+	name_close(server_coid);
+	return EXIT_SUCCESS;
+
+}
     
