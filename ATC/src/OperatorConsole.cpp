@@ -70,7 +70,7 @@ void* OperatorConsole:: operator_console_start_messaging () {
 	}
 
 
-	uint32_t period_sec=3;
+	uint32_t period_sec=20; //period is 20s...too much or too little?
 	uint32_t period_msec=0;
 
 	double period=(double)period_sec+(double)period_msec/1000;
@@ -81,7 +81,7 @@ void* OperatorConsole:: operator_console_start_messaging () {
 	double t;
 
 
-	while (t<60.0){
+	while (true){
 		t=count*period;
 		printf("Iteration number %d: t=%.2f sec \n",count+1,t);
 
