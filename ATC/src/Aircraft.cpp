@@ -92,13 +92,11 @@ void Aircraft::simulate() {
 	int count = 0;
 
 	while (true) {
-		pthread_mutex_lock(&mutex);
 		time = count * period_sec;
 
 		x = x + speedX;
 		y = y + speedY;
 		z = z + speedZ;
-		pthread_mutex_unlock(&mutex);
 
 		count++;
 		timer.waitTimer();

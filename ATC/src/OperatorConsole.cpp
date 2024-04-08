@@ -69,8 +69,12 @@ void OperatorConsole::sporadic_task() {
 		 << "POSX\n"<< "POSY\n" <<"POSZ\n" << "SPEEDX\n" << "SPEEDY\n" << "SPEEDZ\n" << "SEND INFO TO RADAR"<<endl;
 	cin >> myData.command;
 
+	printf("DEBUG MESSAGE: ", myData.command);
+
 	cout << "Enter value:" << endl;
 	cin >> myData.data;
+
+	printf("DEBUG MESSAGE: ", myData.data);
 
 	printf("Operator Console retrieving your data inputs: ", myData.command, " ", myData.data, " ....");
 	if (myData.command.compare("POSX") == 0) {

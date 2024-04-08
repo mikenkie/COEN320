@@ -15,11 +15,9 @@ using namespace std;
 
 Radar::Radar(vector<Aircraft*> acList){
 	aircraftList = acList;
-	pthread_mutex_init(&mutex, NULL);
 }
 
 Radar::Radar(){
-	pthread_mutex_init(&mutex, NULL);
 }
 
 Radar::~Radar() {

@@ -33,7 +33,6 @@ class OperatorConsole {
         void requestAircraftControlChange (Aircraft ar);
         Aircraft getAircraftConsole () const;
 
-        void* operator_console_start_messaging ();
         void operator_console_request();
         void sporadic_task();
 
