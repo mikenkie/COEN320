@@ -41,7 +41,6 @@ void Radar::simulate(){
 		time = count * period_sec;
 
 		if ((time % 5) == 0) {
-			pthread_mutex_lock(&mutex);
 			for (int i = 0; i < 11; i++) {
 				for (int j = 0; j < 11; j++) {
 					m[i][j] = 0;
@@ -67,8 +66,6 @@ void Radar::simulate(){
 				}
 				cout << " " << endl;
 			}
-
-			pthread_mutex_unlock(&mutex);
 		}
 
 		count++;
