@@ -42,17 +42,18 @@ void OperatorConsole:: operator_console_request() {
 
 	int time = 0;
 	int count = 0;
-	bool request = false;
+	string request;
 
 	while (true) {
 		time = count * period_sec;
+
 		if (time % 20 == 0) {
 			pthread_mutex_lock(&mutex);
 
-			cout << "Do you wish to access operator console? (true or false)" << endl;
+			cout << "Do you wish to access operator console? (yes or no)" << endl;
 			cin >> request;
 
-			if (request)
+			if (request.compare("yes") == 0)
 				sporadic_task();
 
 			pthread_mutex_unlock(&mutex);
