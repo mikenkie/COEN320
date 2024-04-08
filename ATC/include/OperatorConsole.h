@@ -7,21 +7,22 @@
 #ifndef OPERATORCONSOLE_H_
 #define OPERATORCONSOLE_H_
 
+
 #include "Aircraft.h"
 #include <sys/dispatch.h>
+#include <pthread.h>
 
-#define ATTACH_POINT "my_channel"
-typedef struct _pulse msg_header_t;
 
 typedef struct _my_data {
-	msg_header_t pulse;
 	std::string command;
 	float data;
 } my_data_t;
 
+
 class OperatorConsole {
     private:
         Aircraft aircraft;
+        pthread_mutex_t mutex;
 
     public:
         // Constructor
@@ -32,8 +33,10 @@ class OperatorConsole {
         void requestAircraftControlChange (Aircraft ar);
         Aircraft getAircraftConsole () const;
 
-        void operator_console_start_routine();
         void* operator_console_start_messaging ();
+        void operator_console_request();
+        void sporadic_task();
+
 };
 
 #endif
