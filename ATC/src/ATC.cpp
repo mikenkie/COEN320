@@ -41,24 +41,54 @@ void *operatorConsoleThread(void* arg) {
     return NULL;
 }
 
+void *writeToFile(void* arg) {
+	vector <Aircraft*>* myList = static_cast<vector <Aircraft*>*>(arg);
+
+	// Create shared output file
+	int  fd;
+	int  size_written;
+
+	// To find the file navigate in the vmware
+	fd = creat( "/data/home/myOutputFile.txt", S_IRUSR | S_IWUSR | S_IXUSR );
+
+	if (fd != -1) {
+		int period_sec = 1;
+		cTimer timer(period_sec, 0); //initialize, set, and start the timer
+
+		int time = 0;
+		int count = 0;
+		string info;
+
+		while (true) {
+			time = count * period_sec;
+
+			if ((time % 30) == 0) {
+				for (Aircraft *currentAircraft: *myList) {
+					info = "Aircraft ID: " + to_string(currentAircraft->getId()) +
+						   "\nAltitude: " + to_string(currentAircraft->getZ()) +
+						   "\nLongitude: " + to_string(currentAircraft->getX()) +
+						   "\nLatitude: " + to_string(currentAircraft->getY()) +
+						   "\nSpeed: " + to_string(currentAircraft->getSpeedX());
+
+					const char* buffer = info.c_str();
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing myfile.dat" );
+				}
+			}
+			count++;
+			timer.waitTimer();
+		}
+
+		close(fd);
+	}
+
+	return NULL;
+}
+
 
 int main() {
-    // Create shared output file
-	 int  fd;
-	 int  size_written;
-	 char buffer[] = { "A text record to be written" };
 
-	 // To find the file navigate in the vmware
-	 fd = creat( "/data/home/myOutputFile.txt", S_IRUSR | S_IWUSR | S_IXUSR );
-
-	 size_written = write( fd, buffer, sizeof( buffer ) );
-
-	 /* test for error              */
-	 if( size_written != sizeof( buffer ) ) {
-	    perror( "Error writing myfile.dat" );
-	    return EXIT_FAILURE;
-	}
-    
     // Create two aircraft
     Aircraft aircraft1(0, 0, 0, 0, 0, 1000, 2000, 0 ), aircraft2(1, 0, 100000, 100000, 0, -1000, -2000, 0 ), aircraft3(2, 0, 100000, 100000, 0, -1000, -2000, 0 );
     vector<Aircraft*> acVec;
@@ -86,11 +116,13 @@ int main() {
     pthread_join(rThread, NULL);
 
     // Testing Operating Console
-    pthread_t ocThread;
+    pthread_t ocThread, writeThread;
     OperatorConsole oc(aircraft1);
 
     pthread_create(&ocThread, NULL, operatorConsoleThread, &oc);
-
+    pthread_create(&writeThread, NULL, writeToFile, &acVec);
+    pthread_join(ocThread, NULL);
+    pthread_join(writeThread, NULL);
 
     return 0;
 }
