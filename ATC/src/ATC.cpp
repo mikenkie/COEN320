@@ -19,6 +19,9 @@ using namespace std;
 #include <sys/trace.h>
 
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 
 void *aircraftThread(void* arg) {
@@ -40,6 +43,22 @@ void *operatorConsoleThread(void* arg) {
 
 
 int main() {
+    // Create shared output file
+	 int  fd;
+	 int  size_written;
+	 char buffer[] = { "A text record to be written" };
+
+	 // To find the file navigate in the vmware
+	 fd = creat( "/data/home/myOutputFile.txt", S_IRUSR | S_IWUSR | S_IXUSR );
+
+	 size_written = write( fd, buffer, sizeof( buffer ) );
+
+	 /* test for error              */
+	 if( size_written != sizeof( buffer ) ) {
+	    perror( "Error writing myfile.dat" );
+	    return EXIT_FAILURE;
+	}
+    
     // Create two aircraft
     Aircraft aircraft1(0, 0, 0, 0, 0, 1000, 2000, 0 ), aircraft2(1, 0, 100000, 100000, 0, -1000, -2000, 0 ), aircraft3(2, 0, 100000, 100000, 0, -1000, -2000, 0 );
     vector<Aircraft*> acVec;
