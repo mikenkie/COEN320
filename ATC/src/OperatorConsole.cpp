@@ -47,6 +47,12 @@ void OperatorConsole:: operator_console_request() {
 //	while (true) {
 //		time = count * period_sec;
 //		if (time % 20 == 0) {
+	string request;
+
+	while (true) {
+		time = count * period_sec;
+
+		if (time % 20 == 0) {
 			pthread_mutex_lock(&mutex);
 
 			cout << "Do you wish to access operator console? (yes or no)" << endl;

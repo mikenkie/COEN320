@@ -94,6 +94,7 @@ void *writeToFile(void* arg) {
 
 
 int main() {
+
     // Create two aircraft
     Aircraft aircraft1(0, 0, 0, 0, 0, 1000, 2000, 0 ), aircraft2(1, 0, 100000, 100000, 0, -1000, -2000, 0 ), aircraft3(2, 0, 100000, 100000, 0, -1000, -2000, 0 );
     vector<Aircraft*> acVec;
