@@ -76,7 +76,10 @@ void *writeToFile(void* arg) {
 						   "\nLatitude: " + to_string(currentAircraft->getY()) +
 						   "\nSpeed: " + to_string(currentAircraft->getSpeedX());
 
-					const char* buffer = info.c_str();
+					const int length = info.length();
+				    char* buffer = new char [length + 1];
+					strcpy (buffer,info.c_str());
+
 					size_written = write( fd, buffer, sizeof( buffer ) );
 					if( size_written != sizeof( buffer ) )
 						perror( "Error writing myfile.dat" );
