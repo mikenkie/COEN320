@@ -70,14 +70,14 @@ void *writeToFile(void* arg) {
 
 			if ((time % 20) == 0) {
 				for (Aircraft *currentAircraft: *myList) {
-					std::string info = "Aircraft ID: " + std::to_string(currentAircraft->getId()) +
+					std::string info = {"Aircraft ID: " + std::to_string(currentAircraft->getId()) +
 						               "\nAltitude: " + std::to_string(currentAircraft->getZ()) +
 						               "\nLongitude: " + std::to_string(currentAircraft->getX()) +
 						               "\nLatitude: " + std::to_string(currentAircraft->getY()) +
-						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX());
+						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX())};
 
 					int length = info.length();
-				        buffer = new char [length + 1];
+				    buffer = new char [length + 1];
 					strcpy (buffer,info.c_str());
 
 					size_written = write( fd, buffer, sizeof( buffer ) );
