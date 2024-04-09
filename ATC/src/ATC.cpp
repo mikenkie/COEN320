@@ -56,28 +56,28 @@ void *writeToFile(void* arg) {
 
 	// To find the file navigate in the vmware
 	fd = creat( "/data/home/myOutputFile.txt", S_IRUSR | S_IWUSR | S_IXUSR );
-
+	char* buffer;
+	
 	if (fd != -1) {
 		int period_sec = 1;
 		cTimer timer(period_sec, 0); //initialize, set, and start the timer
 
 		int time = 0;
 		int count = 0;
-		string info;
 
 		while (true) {
 			time = count * period_sec;
 
 			if ((time % 20) == 0) {
 				for (Aircraft *currentAircraft: *myList) {
-					info = "Aircraft ID: " + to_string(currentAircraft->getId()) +
-						   "\nAltitude: " + to_string(currentAircraft->getZ()) +
-						   "\nLongitude: " + to_string(currentAircraft->getX()) +
-						   "\nLatitude: " + to_string(currentAircraft->getY()) +
-						   "\nSpeed: " + to_string(currentAircraft->getSpeedX());
+					std::string info = "Aircraft ID: " + std::to_string(currentAircraft->getId()) +
+						               "\nAltitude: " + std::to_string(currentAircraft->getZ()) +
+						               "\nLongitude: " + std::to_string(currentAircraft->getX()) +
+						               "\nLatitude: " + std::to_string(currentAircraft->getY()) +
+						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX());
 
 					int length = info.length();
-				    char* buffer = new char [length + 1];
+				        buffer = new char [length + 1];
 					strcpy (buffer,info.c_str());
 
 					size_written = write( fd, buffer, sizeof( buffer ) );
