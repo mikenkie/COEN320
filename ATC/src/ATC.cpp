@@ -70,19 +70,58 @@ void *writeToFile(void* arg) {
 
 			if ((time % 20) == 0) {
 				for (Aircraft *currentAircraft: *myList) {
-					std::string info = {"Aircraft ID: " + std::to_string(currentAircraft->getId()) +
-						               "\nAltitude: " + std::to_string(currentAircraft->getZ()) +
-						               "\nLongitude: " + std::to_string(currentAircraft->getX()) +
-						               "\nLatitude: " + std::to_string(currentAircraft->getY()) +
-						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX())};
-
-					int length = info.length();
-				    buffer = new char [length + 1];
-					strcpy (buffer,info.c_str());
-
+					buffer = {"Aircraft ID: "};
 					size_written = write( fd, buffer, sizeof( buffer ) );
 					if( size_written != sizeof( buffer ) )
-						perror( "Error writing myfile.dat" );
+						perror( "Error writing myfile.txt" );
+
+					buffer = {std::to_string(currentAircraft->getId())};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing ID in myfile.txt" );
+
+					buffer = {"\nAltitude: "};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing myfile.txt" );
+
+					buffer = {std::to_string(currentAircraft->getZ())};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing Z in myfile.txt" );
+
+					buffer = {"\nLongitude: "};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+				    if( size_written != sizeof( buffer ) )
+				    	perror( "Error writing myfile.txt" );
+
+					buffer = {std::to_string(currentAircraft->getX())};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing X in myfile.txt" );
+
+					buffer = {"\nLatitude: "};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing myfile.txt" );
+
+					buffer = {std::to_string(currentAircraft->getY())};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing Y in myfile.txt" );
+
+					buffer = {"\nSpeed: "};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing myfile.txt" );
+
+					buffer = {std::to_string(currentAircraft->getSpeedX())};
+					size_written = write( fd, buffer, sizeof( buffer ) );
+					if( size_written != sizeof( buffer ) )
+						perror( "Error writing SPEED in myfile.txt" );
+
+
+
 				}
 			}
 			count++;
