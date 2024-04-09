@@ -25,6 +25,8 @@ public:
 
 	void simulate();
 
+	void display();
+
 	virtual ~Radar();
 
 	vector <Aircraft*> getAircraftVector();

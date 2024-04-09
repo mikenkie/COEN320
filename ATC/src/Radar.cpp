@@ -12,23 +12,22 @@
 #include "cTimer.h"
 using namespace std;
 
-
-Radar::Radar(vector<Aircraft*> acList){
+Radar::Radar(vector<Aircraft*> acList) {
 	aircraftList = acList;
 }
 
-Radar::Radar(){
+Radar::Radar() {
 }
 
 Radar::~Radar() {
 	// TODO Auto-generated destructor stub
 }
 
-vector <Aircraft*> Radar::getAircraftVector() {
+vector<Aircraft*> Radar::getAircraftVector() {
 	return aircraftList;
 }
 
-void Radar::simulate(){
+void Radar::simulate() {
 	int period_sec = 1;
 	cTimer timer(period_sec, 0); //initialize, set, and start the timer
 
@@ -54,20 +53,29 @@ void Radar::simulate(){
 				if (locX <= 10 && locY <= 10 && locX >= 0 && locY >= 0) {
 					m[locY][locX] = m[locY][locX] + 1;
 				}
-				cout << "Aircraft ID: " << id << " - Position: (" << x << ", "
-						<< y << ", " << z << ") Speed: (" << speedX << ", "
-						<< speedY << ", " << speedZ << ")" << endl;
+//				cout << "Aircraft ID: " << id << " - Position: (" << x << ", "
+//						<< y << ", " << z << ") Speed: (" << speedX << ", "
+//						<< speedY << ", " << speedZ << ")" << endl;
 			}
-			for (int i = 0; i < 11; i++) {
-				for (int j = 0; j < 11; j++) {
-					cout << m[i][j] << " ";
-				}
-				cout << " " << endl;
-			}
+//			for (int i = 0; i < 11; i++) {
+//				for (int j = 0; j < 11; j++) {
+//					cout << m[i][j] << " ";
+//				}
+//				cout << " " << endl;
+//			}
 		}
 
 		count++;
 		timer.waitTimer();
 	} //end_while
+}
+
+void Radar::display() {
+	for (int i = 0; i < 11; i++) {
+		for (int j = 0; j < 11; j++) {
+			cout << m[i][j] << " ";
+		}
+		cout << " " << endl;
+	}
 }
 ;
