@@ -76,7 +76,7 @@ void *writeToFile(void* arg) {
 						   "\nLatitude: " + to_string(currentAircraft->getY()) +
 						   "\nSpeed: " + to_string(currentAircraft->getSpeedX());
 
-					const int length = info.length();
+					int length = info.length();
 				    char* buffer = new char [length + 1];
 					strcpy (buffer,info.c_str());
 
