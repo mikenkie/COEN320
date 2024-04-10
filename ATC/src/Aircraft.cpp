@@ -97,7 +97,9 @@ void Aircraft::simulate() {
 
 	while (true) {
 		int t = count * period_sec;
-		if (t >= arvtime) {
+		active = ((t >= arvtime) && (x >= 0  && x <= 100000) && (y >= 0  && y <= 100000) && (z >= 15000  && z <= 25000));
+		if (active) {
+
 			x = x + speedX;
 			y = y + speedY;
 			z = z + speedZ;

@@ -104,12 +104,12 @@ void *writeToFile(void* arg) {
 int main() {
 
     // Create two aircraft
-    Aircraft aircraft1(0, 0, 0, 0, 0, 1000, 2000, 0 ), aircraft2(1, 0, 100000, 100000, 0, -1000, -2000, 0 ), aircraft3(2, 0, 100000, 100000, 0, -1000, -2000, 0 );
+    Aircraft aircraft1(0, 0, 0, 0, 20000, 1000, 2000,  0), aircraft2(1, 0, 100000, 100000, 20000, -1000, -2000, 0 ), aircraft3(2, 10, 100000, 100000, 20000, -1000, -2000, 0 );
     vector<Aircraft*> acVec;
 
     acVec.push_back(&aircraft1);
     acVec.push_back(&aircraft2);
-//    acVec.push_back(&aircraft3);
+    acVec.push_back(&aircraft3);
 
     //initialize radar
     Radar radar(acVec);
@@ -120,8 +120,8 @@ int main() {
 
     // Start the threads, passing each thread its corresponding aircraft
     pthread_create(&thread1, NULL, aircraftThread, &aircraft1);
-//    pthread_create(&thread2, NULL, aircraftThread, &aircraft2);
-//    pthread_create(&thread3, NULL, aircraftThread, &aircraft3);
+    pthread_create(&thread2, NULL, aircraftThread, &aircraft2);
+    pthread_create(&thread3, NULL, aircraftThread, &aircraft3);
     pthread_create(&writeThread, NULL, writeToFile, &acVec);
     pthread_create(&rThread, NULL, radarThread, &radar);
     pthread_create(&sThread, NULL, systemThread, &system);
