@@ -21,19 +21,18 @@ OperatorConsole::OperatorConsole(){
 	pthread_mutex_init(&mutex, NULL);
 }
 
-OperatorConsole::OperatorConsole(Aircraft* ar): aircraft(ar){
+OperatorConsole::OperatorConsole(vector<Aircraft*> myList){
+	aircraftList = myList;
 	pthread_mutex_init(&mutex, NULL);
 }
 
-void OperatorConsole:: requestAircraftControlChange (Aircraft* ar) {
-    aircraft = ar;
-    std::cout << "Aircraft ID: " << aircraft->getId() << " successfully switched to console." << std::endl;
+Aircraft* OperatorConsole:: requestAircraftControlChange (int id) {
+    for (Aircraft* ar: aircraftList) {
+    	if (ar->getId()==id)
+    		return ar;
+    }
+    return nullptr;
 }
-
-Aircraft* OperatorConsole:: getAircraftConsole () const {
-    return aircraft;
-}
-
 
 void OperatorConsole:: operator_console_request() {
 	my_data_t myData;
@@ -43,6 +42,7 @@ void OperatorConsole:: operator_console_request() {
 	int time = 0;
 	int count = 0;
 	string request = "false";
+	int aircraftIDChangeRequest;
 
 //	while (true) {
 //		time = count * period_sec;
@@ -53,8 +53,16 @@ void OperatorConsole:: operator_console_request() {
 			cout << "Do you wish to access operator console? (yes or no)" << endl;
 			cin >> request;
 
-			if (request.compare("yes") == 0)
-				sporadic_task();
+			if (request.compare("yes") == 0) {
+				cout << "Please enter the aircraft ID you wish to control:" << endl;
+				cin >> aircraftIDChangeRequest;
+
+				aircraft = requestAircraftControlChange(aircraftIDChangeRequest);
+				if (aircraft != nullptr)
+					sporadic_task();
+				else
+					cout << "You have entered an invalid aircraft ID. Aircraft change request failed.";
+			}
 
 			pthread_mutex_unlock(&mutex);
 //		}

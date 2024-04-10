@@ -112,7 +112,7 @@ int main() {
 
     //initialize radar
     Radar radar(acVec);
-    OperatorConsole oc(&aircraft1);
+    OperatorConsole oc(acVec);
     System system(acVec, &radar, &oc);
     // Create two threads
     pthread_t thread1, thread2, thread3, rThread, sThread, ocThread, writeThread;
