@@ -178,9 +178,10 @@ vector<Aircraft*> read_aircrafts_from_input_file() {
 						aircraft_values.speedx,aircraft_values.speedy, aircraft_values.speedz);
 
             	my_aircraft_list.push_back(&new_aircraft);
-            	reset = 1; // Resets next block of data to make aircraft object
+            	reset = 0; // Resets next block of data to make aircraft object
             	break;
             }
+
             reset++;
             index = 0; // Reset index for next line
         }
