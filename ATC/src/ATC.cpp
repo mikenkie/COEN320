@@ -48,7 +48,7 @@ void *operatorConsoleThread(void* arg) {
     return NULL;
 }
 
-void *writeToFile(void* arg) {
+void *write_to_file(void* arg) {
 	vector <Aircraft*>* myList = static_cast<vector <Aircraft*>*>(arg);
 
 	// Create shared output file
@@ -77,11 +77,6 @@ void *writeToFile(void* arg) {
 						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX())+
 									   "\n";
 
-					//int length = info.length();
-					//char buffer[]= new char [length + 1];
-					//strcpy (buffer,info.c_str());
-					//char buffer [] = {info.c_str()};
-
 					char buffer[info.length() + 1];
 					strcpy(buffer, info.c_str());
 
@@ -100,16 +95,119 @@ void *writeToFile(void* arg) {
 	return NULL;
 }
 
+// This is used to generate data of aircrafts from input file
+typedef struct _my_aircraft {
+	int entrancetime;
+	int ID;
+	float coordx, coordy, coordz;
+	float speedx, speedy, speedz;
+} my_aircraft_t;
+
+vector<Aircraft*> read_aircrafts_from_input_file() {
+	vector<Aircraft*> my_aircraft_list;
+	my_aircraft_t aircraft_values;
+	int input_file;
+	int size_read;
+	char buffer[305]; // Manually adjust the size of the buffer according to the input file
+	int index = 0;
+
+	int reset = 1; // The number of lines in text file that defines an aircraft
+
+	/*
+	 * Open a file for input but replace file you want to read with the path.
+	 * For testing, we have four files: input_low, input_medium, input_high, input_overload.
+	 */
+	input_file = open( "input_low.txt", O_RDONLY );
+
+
+    // Read characters from file until end of file is encountered
+    while ((size_read = read(input_file, &buffer[index], 1)) > 0) {
+    	// If the reader reaches the end of the line, else continues to add character to buffer
+        if (buffer[index] == '\n' || index == sizeof(buffer) - 1) {
+            // Print content read up to newline character or end of buffer
+            buffer[index] = '\0'; // Null-terminate the string
+            std::cout << "Line: " << buffer << std::endl; //Debug message
+
+            /* Test for error */
+            if( size_read == -1 )
+                perror( "Error reading input file." );
+
+            // Extract values
+            std::string data;
+
+            int i =0;
+            // We do not want the information that comes before the data. Ex. Time 5. We do not want "Time"
+            for (i = 0; buffer[i] != '\0'; ++i) {
+            	if (buffer[i] == ' ') {
+            		break;
+            	}
+            }
+
+            // Extra data as a string
+            for (int j = i+1; buffer[j] != '\0'; ++j) {
+            	data += buffer[j];
+            }
+
+            switch (reset) {
+            case 1: // Time
+            	aircraft_values.entrancetime = stoi(data);
+            	break;
+            case 2: // Aircraft ID
+            	aircraft_values.ID = stoi(data);
+            	break;
+            case 3: // X
+            	aircraft_values.coordx = stof(data);
+            	break;
+            case 4: // Y
+            	aircraft_values.coordy = stof(data);
+            	break;
+            case 5: // Z
+            	aircraft_values.coordz = stof(data);
+            	break;
+            case 6: // Speed X
+            	aircraft_values.speedx = stof(data);
+            	break;
+            case 7: // Speed Y
+            	aircraft_values.speedy = stof(data);
+            	break;
+            case 8: // Speed Z
+            	aircraft_values.speedz = stof(data);
+
+            	Aircraft new_aircraft(aircraft_values.ID, aircraft_values.entrancetime,
+            			aircraft_values.coordx, aircraft_values.coordy, aircraft_values.coordz,
+						aircraft_values.speedx,aircraft_values.speedy, aircraft_values.speedz);
+
+            	my_aircraft_list.push_back(&new_aircraft);
+            	reset = 1; // Resets next block of data to make aircraft object
+            	break;
+            }
+            reset++;
+            index = 0; // Reset index for next line
+        }
+        else {
+            ++index; // Increment index
+        }
+    }
+
+	/* Close the file */
+	close( input_file );
+
+	return my_aircraft_list;
+}
+
+
+
+
 
 int main() {
 
     // Create two aircraft
-    Aircraft aircraft1(0, 0, 0, 0, 20000, 1000, 2000,  0), aircraft2(1, 0, 100000, 100000, 20000, -1000, -2000, 0 ), aircraft3(2, 10, 100000, 100000, 20000, -1000, -2000, 0 );
-    vector<Aircraft*> acVec;
+    //Aircraft aircraft1(0, 0, 0, 0, 20000, 1000, 2000,  0), aircraft2(1, 0, 100000, 100000, 20000, -1000, -2000, 0 ), aircraft3(2, 10, 100000, 100000, 20000, -1000, -2000, 0 );
+    vector<Aircraft*> acVec = read_aircrafts_from_input_file();
 
-    acVec.push_back(&aircraft1);
-    acVec.push_back(&aircraft2);
-    acVec.push_back(&aircraft3);
+    //acVec.push_back(&aircraft1);
+    //acVec.push_back(&aircraft2);
+   // acVec.push_back(&aircraft3);
 
     //initialize radar
     Radar radar(acVec);
@@ -119,10 +217,10 @@ int main() {
     pthread_t thread1, thread2, thread3, rThread, sThread, ocThread, writeThread;
 
     // Start the threads, passing each thread its corresponding aircraft
-    pthread_create(&thread1, NULL, aircraftThread, &aircraft1);
-    pthread_create(&thread2, NULL, aircraftThread, &aircraft2);
-    pthread_create(&thread3, NULL, aircraftThread, &aircraft3);
-    pthread_create(&writeThread, NULL, writeToFile, &acVec);
+    pthread_create(&thread1, NULL, aircraftThread, &acVec.at(0));
+    pthread_create(&thread2, NULL, aircraftThread, &acVec.at(1));
+    pthread_create(&thread3, NULL, aircraftThread, &acVec.at(2));
+    pthread_create(&writeThread, NULL, write_to_file, &acVec);
     pthread_create(&rThread, NULL, radarThread, &radar);
     pthread_create(&sThread, NULL, systemThread, &system);
     pthread_create(&ocThread, NULL, operatorConsoleThread, &oc);
