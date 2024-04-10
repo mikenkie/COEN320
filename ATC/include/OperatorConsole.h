@@ -11,6 +11,7 @@
 #include "Aircraft.h"
 #include <sys/dispatch.h>
 #include <pthread.h>
+#include <vector>
 
 
 typedef struct _my_data {
@@ -21,17 +22,17 @@ typedef struct _my_data {
 
 class OperatorConsole {
     private:
-        Aircraft* aircraft;
+		Aircraft* aircraft;
+	    vector<Aircraft*> aircraftList;
         pthread_mutex_t mutex;
 
     public:
         // Constructor
         OperatorConsole();
-        OperatorConsole(Aircraft* ar);
+        OperatorConsole(vector<Aircraft*> arList);
 
         // Method to allow controller to change which aircraft they wish to control
-        void requestAircraftControlChange (Aircraft* ar);
-        Aircraft* getAircraftConsole () const;
+        Aircraft* requestAircraftControlChange (int ID);
 
         void operator_console_request();
         void sporadic_task();
