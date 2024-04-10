@@ -173,11 +173,11 @@ vector<Aircraft*> read_aircrafts_from_input_file() {
             case 8: // Speed Z
             	aircraft_values.speedz = stof(data);
 
-            	Aircraft new_aircraft(aircraft_values.ID, aircraft_values.entrancetime,
+            	Aircraft *new_aircraft = new Aircraft(aircraft_values.ID, aircraft_values.entrancetime,
             			aircraft_values.coordx, aircraft_values.coordy, aircraft_values.coordz,
 						aircraft_values.speedx,aircraft_values.speedy, aircraft_values.speedz);
 
-            	my_aircraft_list.push_back(&new_aircraft);
+            	my_aircraft_list.push_back(new_aircraft);
             	reset = 0; // Resets next block of data to make aircraft object
             	break;
             }
