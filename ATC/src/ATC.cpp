@@ -6,6 +6,7 @@ using namespace std;
 #include "CommunicationSystem.h"
 #include "DataDisplay.h"
 #include "System.h"
+#include "fileWriter.h"
 
 #include <vector>
 #include <iostream>
@@ -208,7 +209,11 @@ vector<Aircraft*> read_aircrafts_from_input_file() {
 }
 
 int main() {
-
+	fileWriter writer;
+	writer.writeLow();
+	writer.writeMed();
+	writer.writeHigh();
+	writer.writeOver();
 	// Create two aircraft
 	//Aircraft aircraft1(0, 0, 0, 0, 20000, 1000, 2000,  0), aircraft2(1, 0, 100000, 100000, 20000, -1000, -2000, 0 ), aircraft3(2, 10, 100000, 100000, 20000, -1000, -2000, 0 );
 	vector<Aircraft*> acVec = read_aircrafts_from_input_file();
