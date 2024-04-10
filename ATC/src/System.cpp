@@ -20,7 +20,7 @@ System::System() {
 	// TODO Auto-generated constructor stub
 
 }
-System::System(vector<Aircraft*> acList, Radar* r, OperatorConsole* oc) {
+System::System(vector<Aircraft*> acList, Radar *r, OperatorConsole *oc) {
 	aircraftList = acList;
 	radar = r;
 	opCon = oc;
@@ -41,21 +41,29 @@ void System::simulate() {
 		time = count * period_sec;
 
 		if ((time % 1) == 0) {
-			if ((time % 5) == 0){
+			if ((time % 5) == 0) {
 				radar->display();
 			}
 			for (size_t i = 0; i < aircraftList.size(); ++i) {
-				for (size_t j = i + 1; j < aircraftList.size(); ++j) {
-					if (((fabs(aircraftList[i]->getX() - aircraftList[j]->getX()) <= 3000) ||
-							(fabs(aircraftList[i]->getY() - aircraftList[j]->getY()) <= 3000)) &&
-							(fabs(aircraftList[i]->getZ() - aircraftList[j]->getZ()) <= 1000))
-					{
-						std::cout << "WARNING: Aircraft" << aircraftList[i]->getId() << " and Aircraft" << aircraftList[j]->getId() << " TOO CLOSE.\n";
+				if (aircraftList[i]->isActive()) {
+					for (size_t j = i + 1; j < aircraftList.size(); ++j) {
+						if (aircraftList[j]->isActive()) {
+							if (((fabs(aircraftList[i]->getX()- aircraftList[j]->getX()) <= 3000) &&
+								(fabs(aircraftList[i]->getY()- aircraftList[j]->getY())<= 3000)) &&
+								(fabs(aircraftList[i]->getZ()- aircraftList[j]->getZ())<= 1000))
+							{
+								std::cout << "WARNING: Aircraft"
+										<< aircraftList[i]->getId()
+										<< " and Aircraft"
+										<< aircraftList[j]->getId()
+										<< " TOO CLOSE.\n";
+							}
+						}
 					}
 				}
 			}
-			if ((time % 6 == 0)){
-					opCon->operator_console_request();
+			if ((time % 6 == 0)) {
+				opCon->operator_console_request();
 			}
 		}
 		count++;

@@ -19,10 +19,10 @@ class Aircraft {
 private:
 	pthread_mutex_t mutex;
 	int id;
-	int time;
+	int arvtime;
 	float x, y, z; // Position coordinates
 	float speedX, speedY, speedZ; // Speed components in each direction
-
+	bool active;
 public:
 
 	// Constructor
@@ -37,7 +37,7 @@ public:
 	float getX() const; //longitude
 	float getZ() const; //altitude
 	float getSpeedX() const;
-
+	bool isActive() const;
 	// Mutator for Position Coordinates
 	void setX(float posX);
 	void setY(float posY);
@@ -51,7 +51,7 @@ public:
 	// Method to print the current position and speed of the aircraft
 	void printStatus() const;
 	void radarResponse(int &idOut, float &xOut, float &yOut, float &zOut,
-			float &sXOut, float &sYOut, float &sZOut);
+			float &sXOut, float &sYOut, float &sZOut, bool &activeeOut);
 	void simulate();
 };
 

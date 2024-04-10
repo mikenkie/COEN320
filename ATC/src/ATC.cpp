@@ -74,7 +74,8 @@ void *writeToFile(void* arg) {
 						               "\nAltitude: " + std::to_string(currentAircraft->getZ()) +
 						               "\nLongitude: " + std::to_string(currentAircraft->getX()) +
 						               "\nLatitude: " + std::to_string(currentAircraft->getY()) +
-						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX());
+						               "\nSpeed: " + std::to_string(currentAircraft->getSpeedX())+
+									   "\n";
 
 					//int length = info.length();
 					//char buffer[]= new char [length + 1];
@@ -107,7 +108,7 @@ int main() {
     vector<Aircraft*> acVec;
 
     acVec.push_back(&aircraft1);
-//    acVec.push_back(&aircraft2);
+    acVec.push_back(&aircraft2);
 //    acVec.push_back(&aircraft3);
 
     //initialize radar

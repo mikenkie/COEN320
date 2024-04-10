@@ -46,12 +46,16 @@ void Radar::simulate() {
 			for (Aircraft *aircraft : aircraftList) {
 				int id;
 				float x, y, z, speedX, speedY, speedZ;
-				aircraft->radarResponse(id, x, y, z, speedX, speedY, speedZ);
+				bool active;
+				aircraft->radarResponse(id, x, y, z, speedX, speedY, speedZ, active);
 				int locX, locY;
+
 				locX = x / 10000;
 				locY = y / 10000;
-				if (locX <= 10 && locY <= 10 && locX >= 0 && locY >= 0) {
-					m[locY][locX] = m[locY][locX] + 1;
+				if (active) {
+					if (locX <= 10 && locY <= 10 && locX >= 0 && locY >= 0) {
+						m[locY][locX] = m[locY][locX] + 1;
+					}
 				}
 //				cout << "Aircraft ID: " << id << " - Position: (" << x << ", "
 //						<< y << ", " << z << ") Speed: (" << speedX << ", "

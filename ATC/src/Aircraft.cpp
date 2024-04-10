@@ -19,13 +19,14 @@ using namespace std;
 Aircraft::Aircraft(int id, int t, float posX, float posY, float posZ, float sX,
 		float sY, float sZ) {
 	this->id = id;
-	this->time = t;
+	this->arvtime = t;
 	this->x = posX;
 	this->y = posY;
 	this->z = posZ;
 	this->speedX = sX;
 	this->speedY = sY;
 	this->speedZ = sZ;
+	this->active = false;
 	pthread_mutex_init(&mutex, NULL); // Initialize the mutex
 }
 
@@ -51,6 +52,9 @@ float Aircraft::getZ() const {
 }
 float Aircraft::getSpeedX() const {
 	return speedX;
+}
+bool Aircraft::isActive() const {
+	return active;
 }
 
 void Aircraft::setX(float posX) {
@@ -92,19 +96,19 @@ void Aircraft::simulate() {
 	int count = 0;
 
 	while (true) {
-		time = count * period_sec;
-
-		x = x + speedX;
-		y = y + speedY;
-		z = z + speedZ;
-
+		int t = count * period_sec;
+		if (t >= arvtime) {
+			x = x + speedX;
+			y = y + speedY;
+			z = z + speedZ;
+		}
 		count++;
 		timer.waitTimer();
 	} //end_while
 }
 
 void Aircraft::radarResponse(int &idOut, float &xOut, float &yOut, float &zOut,
-		float &sXOut, float &sYOut, float &sZOut) {
+		float &sXOut, float &sYOut, float &sZOut, bool &activeOut) {
 	idOut = id;
 	xOut = x;
 	yOut = y;
@@ -112,4 +116,5 @@ void Aircraft::radarResponse(int &idOut, float &xOut, float &yOut, float &zOut,
 	sXOut = speedX;
 	sYOut = speedY;
 	sZOut = speedZ;
+	activeOut = active;
 }
