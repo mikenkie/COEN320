@@ -233,7 +233,7 @@ char* choose_input_file() {
 		break;
 	case 3:
 		x = "data/var/tmp/input_high.txt";
-		copy(x.begin(), x.end(), path);
+		path = copy(x.begin(), x.end(), path);
 		break;
 	case 4:
 		x = "data/var/tmp/input_overload.txt";
