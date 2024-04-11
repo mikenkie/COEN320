@@ -44,7 +44,7 @@ void* systemThread(void *arg) {
 
 void* operatorConsoleThread(void *arg) {
 	OperatorConsole *operatorConsole = static_cast<OperatorConsole*>(arg);
-	operatorConsole->operator_console_request();
+//	operatorConsole->operator_console_request();
 	return NULL;
 }
 
@@ -68,7 +68,7 @@ void* write_to_file(void *arg) {
 		while (true) {
 			time = count * period_sec;
 
-			if ((time % 20) == 0) {
+			if ((time % 6) == 0) {
 				for (Aircraft *currentAircraft : *myList) {
 					std::string info = "Aircraft ID: "
 							+ std::to_string(currentAircraft->getId())
@@ -108,19 +108,18 @@ typedef struct _my_aircraft {
 	float speedx, speedy, speedz;
 } my_aircraft_t;
 
-vector<Aircraft*> read_aircrafts_from_input_file() {
-	char *cwd;
+vector<Aircraft*> read_aircrafts_from_input_file(char* filep) {
+/*	char *cwd;
 	char buff[PATH_MAX];
-
 	cwd = getcwd(buff, PATH_MAX);
 	if (cwd != NULL) {
 		printf("My working directory is %s.\n", cwd);
-	}
+	}*/
 	vector<Aircraft*> my_aircraft_list;
 	my_aircraft_t aircraft_values;
 	int input_file;
 	int size_read;
-	char buffer[305]; // Manually adjust the size of the buffer according to the input file
+	char buffer[3123];
 	int index = 0;
 
 	int reset = 1; // The number of lines in text file that defines an aircraft
@@ -129,7 +128,7 @@ vector<Aircraft*> read_aircrafts_from_input_file() {
 	 * Open a file for input but replace file you want to read with the path.
 	 * For testing, we have four files: input_low, input_medium, input_high, input_overload.
 	 */
-	input_file = open("input_low.txt", O_RDONLY);
+	input_file = open(filep, O_RDONLY);
 
 	// Read characters from file until end of file is encountered
 	while ((size_read = read(input_file, &buffer[index], 1)) > 0) {
@@ -208,15 +207,56 @@ vector<Aircraft*> read_aircrafts_from_input_file() {
 	return my_aircraft_list;
 }
 
+char* choose_input_file() {
+	char* path;
+	string x;
+	int option;
+
+	cout << "Type in the integer operating condition: \n"
+	     << "1. Low\n"
+		 << "2. Medium\n"
+		 << "3. High\n"
+		 << "4. Overload\n" << endl;
+
+	cin >> option;
+
+	switch(option) {
+	case 1:
+		x = "input_low.txt";
+		path = new char[x.length() + 1];
+		copy(x.begin(), x.end(), path);
+		break;
+	case 2:
+		x = "input_medium.txt";
+		path = new char[x.length() + 1];
+		copy(x.begin(), x.end(), path);
+		break;
+	case 3:
+		x = "input_high.txt";
+		path = new char[x.length() + 1];
+		path = copy(x.begin(), x.end(), path);
+		break;
+	case 4:
+		x = "input_overload.txt";
+		path = new char[x.length() + 1];
+		copy(x.begin(), x.end(), path);
+		break;
+	}
+
+	return path;
+}
+
 int main() {
-	fileWriter writer;
-	writer.writeLow();
-	writer.writeMed();
-	writer.writeHigh();
-	writer.writeOver();
+	fileWriter writer = fileWriter();
+//	writer.writeLow();
+//	writer.writeMed();
+//	writer.writeHigh();
+//	writer.writeOver();
+
+	char* file_path = choose_input_file();
 	// Create two aircraft
 	//Aircraft aircraft1(0, 0, 0, 0, 20000, 1000, 2000,  0), aircraft2(1, 0, 100000, 100000, 20000, -1000, -2000, 0 ), aircraft3(2, 10, 100000, 100000, 20000, -1000, -2000, 0 );
-	vector<Aircraft*> acVec = read_aircrafts_from_input_file();
+	vector<Aircraft*> acVec = read_aircrafts_from_input_file(file_path);
 
 	//acVec.push_back(&aircraft1);
 	//acVec.push_back(&aircraft2);
