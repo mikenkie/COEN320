@@ -54,12 +54,15 @@ void Radar::simulate() {
 				locY = y / 10000;
 				if (active) {
 					if (locX <= 10 && locY <= 10 && locX >= 0 && locY >= 0) {
+						if(locX == 10 && locY == 8){
+							cout << id;
+						}
 						m[locY][locX] = m[locY][locX] + 1;
 					}
 				}
-//				cout << "Aircraft ID: " << id << " - Position: (" << x << ", "
-//						<< y << ", " << z << ") Speed: (" << speedX << ", "
-//						<< speedY << ", " << speedZ << ")" << endl;
+				/*cout << "Aircraft ID: " << id << " - Position: (" << x << ", "
+						<< y << ", " << z << ") Speed: (" << speedX << ", "
+						<< speedY << ", " << speedZ << ")" << endl;*/
 			}
 //			for (int i = 0; i < 11; i++) {
 //				for (int j = 0; j < 11; j++) {
@@ -81,5 +84,6 @@ void Radar::display() {
 		}
 		cout << " " << endl;
 	}
+	cout << "---------------------" << endl;
 }
 ;

@@ -81,17 +81,11 @@ void OperatorConsole::sporadic_task() {
 	cin >> cmd;
 	myData.command = cmd;
 
-	cout << myData.data;
-
 	cout << "Enter value:" << endl;
 	cin >> value;
 	myData.data = value;
 
-	cout << myData.data;
-
-	printf("DEBUG MESSAGE: ", myData.data);
-
-	printf("Operator Console retrieving your data inputs: ", myData.command, " ", myData.data, " ....");
+	printf("Operator Console retrieving your data inputs \n");
 	if (myData.command.compare("POSX") == 0) {
 		aircraft->setX(myData.data);
 	}

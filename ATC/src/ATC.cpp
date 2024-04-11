@@ -247,7 +247,7 @@ char* choose_input_file() {
 }
 
 int main() {
-	fileWriter writer = fileWriter();
+//	fileWriter writer = fileWriter();
 //	writer.writeLow();
 //	writer.writeMed();
 //	writer.writeHigh();

@@ -70,7 +70,7 @@ void System::simulate() {
 					}
 				}
 			}
-			if ((time % 6 == 0)) {
+			if ((time % 21 == 0)) {
 				opCon->operator_console_request();
 			}
 		}
